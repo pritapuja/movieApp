@@ -1,0 +1,35 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "standard-with-typescript",
+    "prettier"
+  ],
+  "plugins": [
+    "@typescript-eslint",
+    "react",
+    "react-hooks",
+    "prettier"
+  ],
+  "rules": {
+    // Here you can add or override specific rules
+    "prettier/prettier": "error",
+    "react/react-in-jsx-scope": "off", // React 17+ does not require React in scope
+    "@typescript-eslint/explicit-module-boundary-types": "off"
+    
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}
