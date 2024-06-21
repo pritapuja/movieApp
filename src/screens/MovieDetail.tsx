@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 
 const MovieDetail = ({navigation}: any): any => {
     const fetchData = (): void => {
-        const ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0OGUxNTBiZjJkM2E0NGY2ZDUyMDY1YjVmNDExMDIyNCIsInN1YiI6IjY2NjdjNzQ4YTdmNzVmZDVhODFjM2Y1OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Md9pbF1oUVOiA3SOcdzDrJ9nQKsdFoBdZwFEEjB4jcs'
+        const ACCESS_TOKEN = ''
 
         const url = 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1'
 
