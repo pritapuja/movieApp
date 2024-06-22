@@ -1,50 +1,188 @@
-import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
-import { API_URL, API_ACCESS_TOKEN } from '@env';
+import React, { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, ScrollView, ImageBackground, Dimensions } from 'react-native';
+import { API_ACCESS_TOKEN } from '@env';
+import MovieList from '../components/movies/MovieList';
+import type { Movie } from '../types/app';
+import { LinearGradient } from 'expo-linear-gradient';
+import { FontAwesome } from "@expo/vector-icons"
 
-const MovieDetail = ({ navigation }: any): any => {
-    const fetchData = (): void => {
 
-        if (API_URL == null || API_ACCESS_TOKEN.length == null){
-            throw new Error('ENV not found')
-        }
 
-        const options = {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                Authorization: `Bearer ${API_ACCESS_TOKEN}`,
-            },
-        }
+const { width, height } = Dimensions.get('window');
 
-        fetch(API_URL, options)
-            // .then(async (response) => await response.json())
-            .then((response) => response.json())
-            .then((response) => { console.log(response) })
-            .catch((err) => {
-                console.error(err)
-            })
+const MovieDetail = ({ route }: any): JSX.Element => {
+    const { id } = route.params;
+    const [movie, setMovie] = useState<Movie | null>(null);
+
+    useEffect(() => {
+        const fetchMovieDetails = async () => {
+            const url = `https://api.themoviedb.org/3/movie/${id}`;
+            const options = {
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    Authorization: `Bearer ${API_ACCESS_TOKEN}`,
+                },
+            };
+
+            try {
+                const response = await fetch(url, options);
+                const data = await response.json();
+                setMovie(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchMovieDetails();
+    }, [id]);
+
+    if (!movie) {
+        return (
+            <View style={styles.loadingContainer}>
+                <Text>Loading...</Text>
+            </View>
+        );
     }
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Movie Detail Page</Text>
-            <Button
-                title="Fetch Data"
-                onPress={() => {
-                    fetchData()
-                }}
-            />
-        </View>
-    )
-}
+        <ScrollView>
+            <View style={styles.container}>
+                <ImageBackground
+                    style={styles.poster}
+                    source={{ uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}` }}
+                >
+                    <LinearGradient
+                        // colors={['transparent', 'rgba(0, 0, 0, 0.5)']}
+                        colors={['transparent', 'rgba(23, 23, 23, 0.8)', 'rgba(23, 23, 23, 1)']}
+                        start={{ x: 0.5, y: 0 }}
+                        end={{ x: 0.5, y: 1 }}
+                    >
+                        <View style={styles.textContainer}>
+                            <Text style={styles.imageText}>{movie.title}</Text>
+                            <View style={styles.ratingContainer}>
+                                <FontAwesome name="star" size={16} color="yellow" />
+                                <Text style={styles.rating}>{movie.vote_average.toFixed(1)}</Text>
+                            </View>
+                        </View>
+                    </LinearGradient>
+                </ImageBackground>
 
-export default MovieDetail
+                <Text style={styles.overview}>{movie.overview}</Text>
+
+                <View style={styles.detailsContainer}>
+                    <View style={styles.tableRow}>
+                        <View style={styles.cell}>
+                            <Text style={styles.label}>Original Language: </Text>
+                            <Text style={styles.value}>{movie.original_language}</Text>
+                        </View>
+                        <View style={styles.cell}>
+                            <Text style={styles.label}>Popularity: </Text>
+                            <Text style={styles.value}>{movie.popularity}</Text>
+
+                        </View>
+                    </View>
+                    <View style={styles.tableRow}>
+                        <View style={styles.cell}>
+                            <Text style={styles.label}>Release Date: </Text>
+                            <Text style={styles.value}>{movie.release_date}</Text>
+                        </View>
+                        <View style={styles.cell}>
+                            <Text style={styles.label}>Vote Count: </Text>
+                            <Text style={styles.value}>{movie.vote_count}</Text>
+                        </View>
+                    </View>
+                </View>
+            </View>
+
+
+            <MovieList
+                title="Recommendations"
+                path={`movie/${id}/recommendations`}
+                coverType="poster"
+            />
+        </ScrollView>
+    );
+};
 
 const styles = StyleSheet.create({
-    container: {
+    loadingContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
+    container: {
+        marginBottom: 20,
+        alignItems: 'center',
+    },
+    poster: {
+        width: width,
+        height: height * 0.3,
+        marginBottom: 16,
+        justifyContent: 'flex-end',
+    },
+
+    textContainer: {
+        width: '100%',
+        padding: 20,
+
+    },
+    imageText: {
+        color: 'white',
+        fontSize: 20,
+        textAlign: 'left',
+        fontWeight: 'bold',
+    },
+
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 8,
+    },
+    overview: {
+        fontSize: 16,
+        textAlign: 'left',
+        marginTop: 5,
+        marginBottom: 8,
+        paddingHorizontal: 16,
+    },
+    detailsContainer: {
+        width: '90%',
+        marginBottom: 8,
+        marginTop: 8
+    },
+
+    tableRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginBottom: 8,
+    },
+
+    cell: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+    },
+
+    label: {
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    value: {
+        fontSize: 14,
+
+    },
+    ratingContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 2,
+    },
+    rating: {
+        color: 'yellow',
+        fontWeight: '700',
+    },
 });
+
+export default MovieDetail;
