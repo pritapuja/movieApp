@@ -6,7 +6,7 @@ export interface MovieListProps {
 
 export interface Movie {
     backdrop_path: string
-    genres: { id: number; name: string }
+    genres: Genre[] 
     homepage: string
     id: number
     original_title: string
@@ -24,7 +24,8 @@ export interface Movie {
         iso_3166_1: string
         name: string
     }
-    release_date: Date
+    // release_date: Date
+    release_date: string
     revenue: number
     runtime: number
     spoken_languages: {
@@ -45,4 +46,9 @@ export interface MovieItemProps {
     movie: Movie,
     size: { width: number; height: number }
     coverType: 'poster' | 'backdrop'
+}
+
+export interface Genre {
+    id: number;
+    name: string;
 }
