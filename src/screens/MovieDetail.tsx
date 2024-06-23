@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, ScrollView, ImageBackground, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, ImageBackground, Dimensions, TouchableOpacity } from 'react-native';
 import { API_ACCESS_TOKEN } from '@env';
 import MovieList from '../components/movies/MovieList';
 import type { Movie } from '../types/app';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome } from "@expo/vector-icons"
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const { width, height } = Dimensions.get('window');
@@ -13,6 +13,8 @@ const { width, height } = Dimensions.get('window');
 const MovieDetail = ({ route }: any): JSX.Element => {
     const { id } = route.params;
     const [movie, setMovie] = useState<Movie | null>(null);
+    const [isFavorite, setIsFavorite] = useState<boolean>(false);
+
 
     useEffect(() => {
         const fetchMovieDetails = async () => {
@@ -29,6 +31,7 @@ const MovieDetail = ({ route }: any): JSX.Element => {
                 const response = await fetch(url, options);
                 const data = await response.json();
                 setMovie(data);
+                checkIfFavorite(data)
             } catch (error) {
                 console.error(error);
             }
@@ -36,6 +39,46 @@ const MovieDetail = ({ route }: any): JSX.Element => {
 
         fetchMovieDetails();
     }, [id]);
+
+    const checkIfFavorite = async (movie: Movie) => {
+        try {
+            const favoriteList = await AsyncStorage.getItem('@FavoriteList');
+            if (favoriteList) {
+                const favMovies: Movie[] = JSON.parse(favoriteList);
+                const isFav = favMovies.some(favMovie => favMovie.id === movie.id);
+                setIsFavorite(isFav);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const addFavorite = async (movie: Movie) => {
+        try {
+            const initialData = await AsyncStorage.getItem('@FavoriteList');
+            let favMovieList: Movie[] = initialData ? JSON.parse(initialData) : [];
+            favMovieList.push(movie);
+            await AsyncStorage.setItem('@FavoriteList', JSON.stringify(favMovieList));
+            setIsFavorite(true);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const removeFavorite = async (movie: Movie) => {
+        try {
+            const initialData = await AsyncStorage.getItem('@FavoriteList');
+            if (initialData) {
+                let favMovieList: Movie[] = JSON.parse(initialData);
+                favMovieList = favMovieList.filter(favMovie => favMovie.id !== movie.id);
+                await AsyncStorage.setItem('@FavoriteList', JSON.stringify(favMovieList));
+                setIsFavorite(false);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     if (!movie) {
         return (
@@ -60,9 +103,14 @@ const MovieDetail = ({ route }: any): JSX.Element => {
                     >
                         <View style={styles.textContainer}>
                             <Text style={styles.imageText}>{movie.title}</Text>
-                            <View style={styles.ratingContainer}>
-                                <FontAwesome name="star" size={16} color="yellow" />
-                                <Text style={styles.rating}>{movie.vote_average.toFixed(1)}</Text>
+                            <View style={styles.rowContainer}>
+                                <View style={styles.ratingContainer}>
+                                    <FontAwesome name="star" size={16} color="yellow" />
+                                    <Text style={styles.rating}>{movie.vote_average.toFixed(1)}</Text>
+                                </View>
+                                <TouchableOpacity onPress={() => isFavorite ? removeFavorite(movie) : addFavorite(movie)}>
+                                    <FontAwesome name={isFavorite ? "heart" : "heart-o"} size={32} color="red" />
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </LinearGradient>
@@ -182,6 +230,11 @@ const styles = StyleSheet.create({
     rating: {
         color: 'yellow',
         fontWeight: '700',
+    },
+    rowContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
 });
 
