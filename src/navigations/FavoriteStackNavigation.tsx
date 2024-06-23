@@ -7,12 +7,12 @@ import Favorite from '../screens/Favorite';
 
 const Stack = createNativeStackNavigator();
 
-const HomeStackNavigation = (): JSX.Element => (
+const FavoriteStackNavigation = (): JSX.Element => (
   <Stack.Navigator>
     <Stack.Screen
-      name="Home"
-      component={Home}
-      options={{ headerShown: false }}
+      name="Favorite"
+      component={Favorite}
+      options={{ headerShown: false, title: 'Favorite' }}
     />
     <Stack.Screen
       name="MovieDetail"
@@ -20,7 +20,6 @@ const HomeStackNavigation = (): JSX.Element => (
       options={{ headerShown: true, title: 'Movie Detail' }}
     />
   </Stack.Navigator>
-
 );
 
-export default HomeStackNavigation;
+export default FavoriteStackNavigation;
