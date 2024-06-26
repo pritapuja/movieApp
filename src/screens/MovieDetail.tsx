@@ -92,15 +92,17 @@ const MovieDetail = ({ route }: any): JSX.Element => {
         <ScrollView>
             <View style={styles.container}>
                 <ImageBackground
+                    // resizeMode="cover"
                     style={styles.poster}
                     source={{ uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}` }}
+
                 >
                     <LinearGradient
-                        // colors={['transparent', 'rgba(0, 0, 0, 0.5)']}
-                        colors={['transparent', 'rgba(23, 23, 23, 0.8)', 'rgba(23, 23, 23, 1)']}
-                        start={{ x: 0.5, y: 0 }}
-                        end={{ x: 0.5, y: 1 }}
+                        colors={['#00000000', 'rgba(0, 0, 0, 0.7)']}
+                        locations={[0.6, 0.8]}
+                        style={styles.gradientStyle}
                     >
+
                         <View style={styles.textContainer}>
                             <Text style={styles.imageText}>{movie.title}</Text>
                             <View style={styles.rowContainer}>
@@ -109,7 +111,7 @@ const MovieDetail = ({ route }: any): JSX.Element => {
                                     <Text style={styles.rating}>{movie.vote_average.toFixed(1)}</Text>
                                 </View>
                                 <TouchableOpacity onPress={() => isFavorite ? removeFavorite(movie) : addFavorite(movie)}>
-                                    <FontAwesome name={isFavorite ? "heart" : "heart-o"} size={32} color="red" />
+                                    <FontAwesome name={isFavorite ? "heart" : "heart-o"} size={32} color="pink" />
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -171,9 +173,7 @@ const styles = StyleSheet.create({
     },
 
     textContainer: {
-        width: '100%',
-        padding: 20,
-
+        padding: 15,
     },
     imageText: {
         color: 'white',
@@ -235,6 +235,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+    },
+    gradientStyle: {
+        padding: 8,
+        height: '100%',
+        width: '100%',
+        borderRadius: 8,
+        display: 'flex',
+        justifyContent: 'flex-end',
     },
 });
 

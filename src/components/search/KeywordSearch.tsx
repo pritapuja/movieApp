@@ -27,7 +27,7 @@ const KeywordSearch = (): JSX.Element => {
         try {
             const response = await fetch(url, options);
             const data = await response.json();
-            setMovies(data.results);
+            setMovies(data.results.filter((movie: Movie) => movie.vote_average !== 0));
         } catch (error) {
             console.error(error);
         } finally {
@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 16,
         width: '100%',
+        paddingHorizontal:0
     },
     searchBarContainer: {
         width: '100%',

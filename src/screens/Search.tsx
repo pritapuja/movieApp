@@ -38,9 +38,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     padding: 16,
+    width: '100%',
   },
   topBarContainer: {
-    display: 'flex',
     flexDirection: 'row',
     width: '100%',
   },

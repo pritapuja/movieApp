@@ -4,7 +4,7 @@ import MovieDetail from '../screens/MovieDetail';
 import Search from '../screens/Search';
 import KeywordSearch from '../components/search/KeywordSearch';
 import CategorySearch from '../components/search/CategorySearch';
-
+import CategorySearchResult from '../components/search/CategorySearchResult';
 
 
 const Stack = createNativeStackNavigator();
@@ -27,10 +27,16 @@ const SearchStackNavigation = (): JSX.Element => (
       options={{ headerShown: false, title: 'KeywordSearch' }}
     />
 
-<Stack.Screen
+    <Stack.Screen
       name="CategorySearch"
       component={CategorySearch}
       options={{ headerShown: false, title: 'CategorySearch' }}
+    />
+
+    <Stack.Screen
+      name="CategorySearchResult"
+      component={CategorySearchResult}
+      options={{ headerShown: true, title: 'Category Search Result' }}
     />
 
   </Stack.Navigator>
