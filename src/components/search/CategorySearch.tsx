@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { API_ACCESS_TOKEN } from '@env';
-// import type { Genre } from '../../types/app';
 import type { Movie } from '../../types/app';
 import { CategorySearchNavigationProp } from '../../types/navigation';
 

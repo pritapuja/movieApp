@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, ImageBackground, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Movie } from '../types/app';
-import { LinearGradient } from 'expo-linear-gradient';
-import { FontAwesome } from "@expo/vector-icons";
 import MovieItem from '../components/movies/MovieItem';
 
 const Favorite = ({ navigation }: any): JSX.Element => {
