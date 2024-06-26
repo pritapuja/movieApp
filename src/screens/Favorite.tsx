@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Movie } from '../types/app';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome } from "@expo/vector-icons";
+import MovieItem from '../components/movies/MovieItem';
 
 const Favorite = ({ navigation }: any): JSX.Element => {
   const [favoriteMovies, setFavoriteMovies] = useState<Movie[]>([]);
@@ -25,39 +26,14 @@ const Favorite = ({ navigation }: any): JSX.Element => {
     return unsubscribe;
   }, [navigation]);
 
-  const renderItem = ({ item }: { item: Movie }) => (
-    <TouchableOpacity
-      onPress={() => navigation.navigate('MovieDetail', { id: item.id })}
-      style={styles.itemContainer}
-    >
-      <ImageBackground
-        style={styles.poster}
-        source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}
-      >
-        <LinearGradient
-          colors={['transparent', 'rgba(23, 23, 23, 0.8)', 'rgba(23, 23, 23, 1)']}
-          start={{ x: 0.5, y: 0 }}
-          end={{ x: 0.5, y: 1 }}
-          style={styles.gradient}
-        >
-          <View style={styles.textContainer}>
-            <Text style={styles.imageText}>{item.title}</Text>
-              <View style={styles.ratingContainer}>
-                <FontAwesome name="star" size={16} color="yellow" />
-                <Text style={styles.rating}>{item.vote_average.toFixed(1)}</Text>
-              </View>
-          </View>
-        </LinearGradient>
-      </ImageBackground>
-    </TouchableOpacity>
-  );
-
   return (
     <View style={styles.container}>
       {/* <Text style={styles.title}>Favorite Movies</Text> */}
       <FlatList
         data={favoriteMovies}
-        renderItem={renderItem}
+        renderItem={({ item }) => (
+          <MovieItem movie={item} size={{ width: 100, height: 160 }} coverType="poster" />
+        )}
         keyExtractor={(item) => item.id.toString()}
         numColumns={3}
         contentContainerStyle={styles.list}
