@@ -169,7 +169,6 @@ const styles = StyleSheet.create({
         width: width,
         height: height * 0.3,
         marginBottom: 16,
-        justifyContent: 'flex-end',
     },
 
     textContainer: {
